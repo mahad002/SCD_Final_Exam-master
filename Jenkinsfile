@@ -41,8 +41,14 @@ pipeline {
 
     post {
         always {
-            // Clean up any leftover Docker artifacts
-            sh 'docker system prune -f'
+            script {
+                // Conditional cleanup based on OS
+                if (isUnix()) {
+                    sh 'docker system prune -f'
+                } else {
+                    bat 'docker system prune -f'
+                }
+            }
         }
     }
 }

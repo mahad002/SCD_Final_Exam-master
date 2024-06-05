@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerHub')
         GIT_REPO = 'https://github.com/mahad002/SCD_Final_Exam-master.git'
-        GIT_BRANCH = 'main'  // Replace 'main' with the default branch of your repository if it's different
+        GIT_BRANCH = 'main' 
     }
 
     stages {
@@ -20,7 +20,7 @@ pipeline {
             }
         }
 
-        stage('Build and Push Docker Images') {
+        stage('1239 Build and Push Docker Images') {
             steps {
                 script {
                     // Log in to Docker Hub
@@ -42,7 +42,6 @@ pipeline {
     post {
         always {
             script {
-                // Conditional cleanup based on OS
                 if (isUnix()) {
                     sh 'docker system prune -f'
                 } else {

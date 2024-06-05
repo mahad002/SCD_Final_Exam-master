@@ -10,7 +10,7 @@ pipeline {
             }
         }
         
-        stage('Build Docker Images') {
+        stage('1239 Build Docker Images') {
             steps {
                 script {
                     docker.build('mahad002/final:backend-auth', './Auth')
@@ -22,7 +22,7 @@ pipeline {
             }
         }
         
-        stage('Push Docker Images') {
+        stage('1239 Push Docker Images') {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', '<docker-hub-credentials-id>') {

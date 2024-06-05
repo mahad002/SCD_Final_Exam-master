@@ -18,29 +18,29 @@ pipeline {
         stage('1239 Build and Push Docker Images') {
             steps {
                 script {
-                    def services = [
-                        'Auth': 'Auth/dockerfile',
-                        'Post': 'Post/dockerfile',
-                        'Classrooms': 'Classrooms/dockerfile',
-                        'client': 'client/dockerfile',
-                        'event-bus': 'event-bus/dockerfile'
-                    ]
-                    
-                    services.each { serviceName, dockerfilePath ->
-                        def imageTag = "${registry}/${serviceName}:${BUILD_NUMBER}"
-                        def dockerfileFullPath = "${workspace}/${dockerfilePath}"
-                        
-                        // Build the Docker image for the service
-                        bat "docker build -t ${imageTag} -f ${dockerfileFullPath} ${workspace}"
-                        
-                        // Push the Docker image to Docker Hub
-                        bat "docker push ${imageTag}"
-                        
-                        // Clean up: Remove the local Docker image
-                        bat "docker rmi ${imageTag}"
-                    }
+                def services = [
+                    'Auth': 'Auth/dockerfile',
+                    'Post': 'Post/dockerfile',
+                    'Classrooms': 'Classrooms/dockerfile',
+                    'client': 'client/dockerfile',
+                    'event-bus': 'event-bus/dockerfile'
+                ]
+                
+                services.each { serviceName, dockerfilePath ->
+                    def imageTag = "${registry}/${serviceName}:${BUILD_NUMBER}"
+                    def dockerfileFullPath = "${workspace}/${dockerfilePath}"
+            
+                    // Build the Docker image for the service
+                    bat "docker build -t ${imageTag} -f ${dockerfileFullPath} ${workspace}"
+            
+                    // Push the Docker image to Docker Hub
+                    bat "docker push ${imageTag}"
+            
+                    // Clean up: Remove the local Docker image
+                    bat "docker rmi ${imageTag}"
                 }
             }
         }
+}
     }
 }

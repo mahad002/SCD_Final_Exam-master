@@ -19,16 +19,16 @@ pipeline {
             steps {
                 script {
                 def services = [
-                    'auth': 'Auth/dockerfile',
-                    'post': 'Post/dockerfile',
-                    'classrooms': 'Classrooms/dockerfile',
-                    'client': 'client/dockerfile',
-                    'event-bus': 'event-bus/dockerfile'
+                    'Auth': 'Auth/Dockerfile',
+                    'Post': 'Post/Dockerfile',
+                    'Classrooms': 'Classrooms/Dockerfile',
+                    'client': 'client/Dockerfile',
+                    'event-bus': 'event-bus/Dockerfile'
                 ]
                 
                 services.each { serviceName, dockerfilePath ->
                     def imageTag = "${registry}/${serviceName}:${BUILD_NUMBER}"
-                    def dockerfileFullPath = "${workspace}/${serviceName}/.Dockerfile"
+                    def dockerfileFullPath = "${workspace}/${dockerfilePath}"
 
                     // Build the Docker image for the service
                     bat "docker build -t ${imageTag} -f ${dockerfileFullPath} ${workspace}"

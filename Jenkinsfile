@@ -9,7 +9,7 @@ pipeline {
         stage('1239 Cloning our Git') {
             steps {
                 def branchName = 'main'
-                git 'https://github.com/mahad002/SCD_Final_Exam-master.git'
+                git 'https://github.com/mahad002/SCD_Final_Exam-master.git', branch: branchName
             }
         }
         stage('1239 Building our images') {

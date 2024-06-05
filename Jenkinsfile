@@ -27,7 +27,7 @@ pipeline {
                 ]
                 
                 services.each { serviceName, dockerfilePath ->
-                    def imageTag = "${registry}/${serviceName}:${BUILD_NUMBER}"
+                    def imageTag = "${registry}/${serviceName}-v${BUILD_NUMBER}"
                     def dockerfileFullPath = "${workspace}/${dockerfilePath}"
 
                     // Build the Docker image for the service

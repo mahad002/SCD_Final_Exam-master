@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        registry = "YourDockerhubAccount/YourRepository"
+        registry = "mahad002/final"
         registryCredential = 'dockerHub'
     }
     

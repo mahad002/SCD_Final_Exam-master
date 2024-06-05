@@ -1,0 +1,33 @@
+services:
+  database:
+    image: mongo:latest
+
+  backend-auth:
+    build: ./Auth
+    image: mahad002/final:backend-auth
+    ports:
+      - "4000:4000"
+
+  backend-classroom:
+    build: ./Classrooms
+    image: mahad002/final:backend-classroom
+    ports:
+      - "4001:4001"
+
+  frontend-client:
+    build: ./client
+    image: mahad002/final:frontend-client
+    ports:
+      - "1239:3000"
+
+  backend-event-bus:
+    build: ./event-bus
+    image: mahad002/final:backend-event-bus
+    ports:
+      - "4009:4009"
+
+  backend-post:
+    build: ./Post
+    image: mahad002/final:backend-event-bus
+    ports:
+      - "4002:4002"

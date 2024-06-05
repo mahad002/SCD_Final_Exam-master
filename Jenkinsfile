@@ -8,8 +8,10 @@ pipeline {
     stages {
         stage('1239 Cloning our Git') {
             steps {
-                def branchName = 'main'
-                git 'https://github.com/mahad002/SCD_Final_Exam-master.git', branch: branchName
+                script {
+                    def branchName = 'main' 
+                    git url: 'https://github.com/mahad002/SCD_Final_Exam-master.git', branch: branchName
+                }
             }
         }
         stage('1239 Building our images') {
@@ -44,7 +46,6 @@ pipeline {
     post {
         always {
             script {
-                // Conditional cleanup based on OS
                 if (isUnix()) {
                     sh 'docker system prune -f'
                 } else {

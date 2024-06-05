@@ -37,7 +37,7 @@ pipeline {
                 script {
                     def services = ['backend-auth', 'backend-classroom', 'frontend-client', 'backend-event-bus', 'backend-post']
                     services.each { service ->
-                        sh "docker rmi ${registry}:${service}-${env.BUILD_NUMBER}"
+                        bat "docker rmi ${registry}:${service}-${env.BUILD_NUMBER}"
                     }
                 }
             }

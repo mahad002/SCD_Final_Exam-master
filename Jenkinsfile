@@ -6,12 +6,13 @@ pipeline {
     }
     agent any
     stages {
-        stage('Cloning our Git') {
+        stage('1239 Cloning our Git') {
             steps {
+                def branchName = 'main'
                 git 'https://github.com/mahad002/SCD_Final_Exam-master.git'
             }
         }
-        stage('Building our images') {
+        stage('1239 Building our images') {
             steps {
                 script {
                     def services = [
@@ -29,7 +30,7 @@ pipeline {
                 }
             }
         }
-        stage('Cleaning up') {
+        stage('1239 Cleaning up') {
             steps {
                 script {
                     def services = ['backend-auth', 'backend-classroom', 'frontend-client', 'backend-event-bus', 'backend-post']

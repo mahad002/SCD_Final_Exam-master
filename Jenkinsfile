@@ -16,7 +16,6 @@ pipeline {
         }   
         
         stage('1239 Build and Push Docker Images') {
-            stage('Build and Push Docker Images') {
             steps {
                 script {
                     def services = [
@@ -43,6 +42,5 @@ pipeline {
                 }
             }
         }
-    }
     }
 }

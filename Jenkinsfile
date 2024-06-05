@@ -3,13 +3,20 @@ pipeline {
 
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerHub')
+        GIT_REPO = 'https://github.com/mahad002/SCD_Final_Exam-master.git'
+        GIT_BRANCH = 'main'  // Replace 'main' with the default branch of your repository if it's different
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from the repository
-                git 'https://github.com/mahad002/SCD_Final_Exam-master.git'
+                script {
+                    // Checkout the code from the repository
+                    checkout([$class: 'GitSCM',
+                              branches: [[name: env.GIT_BRANCH]],
+                              userRemoteConfigs: [[url: env.GIT_REPO]]
+                    ])
+                }
             }
         }
 

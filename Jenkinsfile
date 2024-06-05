@@ -19,9 +19,9 @@ pipeline {
             steps {
                 script {
                 def services = [
-                    'Auth': 'Auth/dockerfile',
-                    'Post': 'Post/dockerfile',
-                    'Classrooms': 'Classrooms/dockerfile',
+                    'auth': 'Auth/dockerfile',
+                    'post': 'Post/dockerfile',
+                    'classrooms': 'Classrooms/dockerfile',
                     'client': 'client/dockerfile',
                     'event-bus': 'event-bus/dockerfile'
                 ]

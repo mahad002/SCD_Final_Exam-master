@@ -1,40 +1,41 @@
 pipeline {
     agent any
-    
+
+    environment {
+        DOCKER_HUB_CREDENTIALS = credentials('dockerHub')
+    }
+
     stages {
-        stage('Docker Login') {
+        stage('Checkout') {
             steps {
-                script {
-                    sh 'docker login -u mahad002 -p p.Mahad08'
-                }
+                // Checkout the code from the repository
+                git 'https://github.com/mahad002/SCD_Final_Exam-master.git'
             }
         }
-        
-        stage('1239 Build Docker Images') {
+
+        stage('Build and Push Docker Images') {
             steps {
                 script {
-                    docker.build('mahad002/final:backend-auth', './Auth')
-                    docker.build('mahad002/final:backend-classroom', './Classrooms')
-                    docker.build('mahad002/final:frontend-client', './client')
-                    docker.build('mahad002/final:backend-event-bus', './event-bus')
-                    docker.build('mahad002/final:backend-post', './Post')
-                }
-            }
-        }
-        
-        stage('1239 Push Docker Images') {
-            steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', '<docker-hub-credentials-id>') {
-                        docker.push('mahad002/final:backend-auth')
-                        docker.push('mahad002/final:backend-classroom')
-                        docker.push('mahad002/final:frontend-client')
-                        docker.push('mahad002/final:backend-event-bus')
-                        docker.push('mahad002/final:backend-post')
+                    // Log in to Docker Hub
+                    docker.withRegistry('', DOCKER_HUB_CREDENTIALS) {
+                        // Build and push each service
+                        def services = ['backend-auth', 'backend-classroom', 'frontend-client', 'backend-event-bus', 'backend-post']
+                        services.each { service ->
+                            sh """
+                                docker-compose build ${service}
+                                docker-compose push ${service}
+                            """
+                        }
                     }
                 }
             }
         }
     }
-}
 
+    post {
+        always {
+            // Clean up any leftover Docker artifacts
+            sh 'docker system prune -f'
+        }
+    }
+}

@@ -3,19 +3,19 @@ pipeline {
     
     environment {
         githubRepo = "https://github.com/mahad002/SCD_Final_Exam-master.git"
-        branchName = "main" // Replace 'your_branch_name' with the name of your branch
+        branchName = "main" 
         registry = "mahad002/final"
         registryCredential = 'dockerHub'
     }
     
     stages {
-        stage('Clone GitHub Repository') {
+        stage('1239 Clone GitHub Repository') {
             steps {
                 git branch: branchName, url: githubRepo
             }
         }
         
-        stage('Build and Push Docker Images') {
+        stage('1239 Build and Push Docker Images') {
             steps {
                 script {
                     def services = [

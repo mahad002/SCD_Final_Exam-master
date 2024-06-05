@@ -1,55 +1,37 @@
 pipeline {
-    environment {
-        registry = "mahad002/final"
-        registryCredential = 'dockerHub'
-        dockerImage = ''
-    }
     agent any
+    
+    environment {
+        registry = "YourDockerhubAccount/YourRepository"
+        registryCredential = 'dockerHub'
+    }
+    
     stages {
-        stage('1239 Cloning our Git') {
-            steps {
-                script {
-                    def branchName = 'main' 
-                    git url: 'https://github.com/mahad002/SCD_Final_Exam-master.git', branch: branchName
-                }
-            }
-        }
-        stage('1239 Building our images') {
+        stage('Build and Push Docker Images') {
             steps {
                 script {
                     def services = [
-                        [path: './Auth', image: 'backend-auth'],
-                        [path: './Classrooms', image: 'backend-classroom'],
-                        [path: './client', image: 'frontend-client'],
-                        [path: './event-bus', image: 'backend-event-bus'],
-                        [path: './Post', image: 'backend-post']
+                        'Auth': 'Auth/dockerfile',
+                        'Post': 'Post/dockerfile',
+                        'Classrooms': 'Classrooms/dockerfile',
+                        'client': 'client/dockerfile',
+                        'event-bus': 'event-bus/dockerfile'
                     ]
                     
-                    services.each { service ->
-                        dockerImage = docker.build "${registry}:${service.image}-${env.BUILD_NUMBER}", service.path
-                        dockerImage.push()
+                    services.each { serviceName, dockerfilePath ->
+                        def imageTag = "${registry}:${serviceName}_${BUILD_NUMBER}"
+                        
+                        // Build the Docker image for the service
+                        docker.build(imageTag, "-f ${dockerfilePath} .")
+                        
+                        // Push the Docker image to Docker Hub
+                        docker.withRegistry('https://index.docker.io/v1/', registryCredential) {
+                            docker.image(imageTag).push()
+                        }
+                        
+                        // Clean up: Remove the local Docker image
+                        sh "docker rmi ${imageTag}"
                     }
-                }
-            }
-        }
-        stage('1239 Cleaning up') {
-            steps {
-                script {
-                    def services = ['backend-auth', 'backend-classroom', 'frontend-client', 'backend-event-bus', 'backend-post']
-                    services.each { service ->
-                        bat "docker rmi ${registry}:${service}-${env.BUILD_NUMBER}"
-                    }
-                }
-            }
-        }
-    }
-    post {
-        always {
-            script {
-                if (isUnix()) {
-                    sh 'docker system prune -f'
-                } else {
-                    bat 'docker system prune -f'
                 }
             }
         }

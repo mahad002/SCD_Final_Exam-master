@@ -13,9 +13,10 @@ pipeline {
             steps {
                 git branch: branchName, url: githubRepo
             }
-        }
+        }   
         
         stage('1239 Build and Push Docker Images') {
+            stage('Build and Push Docker Images') {
             steps {
                 script {
                     def services = [
@@ -31,18 +32,17 @@ pipeline {
                         def dockerfileFullPath = "${workspace}/${dockerfilePath}"
                         
                         // Build the Docker image for the service
-                        docker.build(imageTag, "-f ${dockerfileFullPath} ${workspace}")
+                        bat "docker build -t ${imageTag} -f ${dockerfileFullPath} ${workspace}"
                         
                         // Push the Docker image to Docker Hub
-                        docker.withRegistry('https://index.docker.io/v1/', registryCredential) {
-                            docker.image(imageTag).push()
-                        }
+                        bat "docker push ${imageTag}"
                         
                         // Clean up: Remove the local Docker image
-                        sh "docker rmi ${imageTag}"
+                        bat "docker rmi ${imageTag}"
                     }
                 }
             }
         }
+    }
     }
 }

@@ -2,11 +2,19 @@ pipeline {
     agent any
     
     environment {
+        githubRepo = "https://github.com/mahad002/SCD_Final_Exam-master.git"
+        branchName = "main" // Replace 'your_branch_name' with the name of your branch
         registry = "mahad002/final"
         registryCredential = 'dockerHub'
     }
     
     stages {
+        stage('Clone GitHub Repository') {
+            steps {
+                git branch: branchName, url: githubRepo
+            }
+        }
+        
         stage('Build and Push Docker Images') {
             steps {
                 script {
@@ -19,10 +27,11 @@ pipeline {
                     ]
                     
                     services.each { serviceName, dockerfilePath ->
-                        def imageTag = "${registry}:${serviceName}_${BUILD_NUMBER}"
+                        def imageTag = "${registry}/${serviceName}:${BUILD_NUMBER}"
+                        def dockerfileFullPath = "${workspace}/${dockerfilePath}"
                         
                         // Build the Docker image for the service
-                        docker.build(imageTag, "-f ${dockerfilePath} .")
+                        docker.build(imageTag, "-f ${dockerfileFullPath} ${workspace}")
                         
                         // Push the Docker image to Docker Hub
                         docker.withRegistry('https://index.docker.io/v1/', registryCredential) {
